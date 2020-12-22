@@ -1,0 +1,16 @@
+{
+  "name": "vue-input-fields",
+  "version": "1.0.0",
+  "description": "input fields for vue.js with validation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "js",
+    "input-fields"
+  ],
+  "author": "mluria",
+  "license": "ISC"
+}

@@ -32,11 +32,11 @@ export default [{
     output: {
       dir: 'dist/core',
       format: 'es',
-      plugins:[terser()]
+      plugins:[]
     },
     plugins: [
       //babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: []
+    external: ['vue']
   }]; 

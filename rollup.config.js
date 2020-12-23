@@ -19,13 +19,13 @@ export default [{
     output: {
       dir: 'dist/formats',
       format: 'es',
-      plugins:[terser()]
+      plugins:[]
     },
     plugins: [
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: [ /core-js/]
+    external: []
   },
   {
     input: 'src/forms/core/index.js',
@@ -38,5 +38,5 @@ export default [{
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: [ /core-js/]
+    external: []
   }]; 

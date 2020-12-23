@@ -14,8 +14,9 @@
   "author": "mluria",
   "license": "ISC",
   "dependencies": {
-    "vue": "^2.6.12",
-    "@babel/polyfill": "^7.12.1"
+    "@babel/polyfill": "^7.12.1",
+    "core-js": "^3.6.5",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",

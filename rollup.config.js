@@ -9,7 +9,7 @@ export default [{
       dir: 'dist/validators',
       format: 'esm',
       //name:'validaor',
-      plugins:[terser()]
+      //plugins:[terser()]
     },
     plugins: [
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),

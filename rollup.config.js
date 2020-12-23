@@ -13,7 +13,7 @@ export default [{
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: ['vue',/core-js/]
+    external: [/core-js/]
   },
   {
     input: 'src/forms/formats/index.js',
@@ -27,7 +27,7 @@ export default [{
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: ['vue',/core-js/]
+    external: [/core-js/]
   },
   {
     input: 'src/forms/core/index.js',
@@ -35,7 +35,10 @@ export default [{
       dir: 'dist/core',
       format: 'umd',
       name:'core',
-      plugins: [],
+      plugins: [terser()],
+      globals: {
+        vue: 'Vue'
+      }
     },
     plugins: [
       babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),

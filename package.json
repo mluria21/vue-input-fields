@@ -15,5 +15,15 @@
   "license": "ISC",
   "dependencies": {
     "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "libphonenumber-js": "^1.9.6",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

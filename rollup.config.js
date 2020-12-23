@@ -5,7 +5,8 @@ export default [{
     input: 'src/forms/validators/index.js',
     output: {
       dir: 'dist/validators',
-      format: 'es',
+      format: 'umd',
+      name:'validaor',
       plugins:[terser()]
     },
     plugins: [
@@ -18,7 +19,8 @@ export default [{
     input: 'src/forms/formats/index.js',
     output: {
       dir: 'dist/formats',
-      format: 'es',
+      format: 'umd',
+      name:'format',
       plugins:[terser()]
     },
     plugins: [
@@ -31,7 +33,8 @@ export default [{
     input: 'src/forms/core/index.js',
     output: {
       dir: 'dist/core',
-      format: 'es',
+      format: 'umd',
+      name:'core',
       plugins: [],
     },
     plugins: [

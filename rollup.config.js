@@ -6,26 +6,26 @@ export default [{
     output: {
       dir: 'dist/validators',
       format: 'es',
-      plugins:[terser()]
+      plugins:[/*terser()*/]
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      babel({ babelHelpers: 'runtime' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: [ /core-js/]
+    external: [/@babel\/runtime/]
   },
   {
     input: 'src/forms/formats/index.js',
     output: {
       dir: 'dist/formats',
       format: 'es',
-      plugins:[terser()]
+      plugins:[/*terser()*/]
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      babel({ babelHelpers: 'runtime' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: [ /core-js/]
+    external: [ /core-js/,/@babel\/runtime/]
   },
   {
     input: 'src/forms/core/index.js',
@@ -35,8 +35,8 @@ export default [{
       plugins:[terser()]
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      babel({ babelHelpers: 'runtime' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
-    external: [ /core-js/]
+    external: [ /core-js/,/@babel\/runtime/]
   }];

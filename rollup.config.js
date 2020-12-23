@@ -1,15 +1,23 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { babel } from '@rollup/plugin-babel';
 import {terser} from 'rollup-plugin-terser';
+import {getBabelOutputPlugin} from '@rollup/plugin-babel'
 export default [{
     input: 'src/forms/validators/index.js',
     output: {
       dir: 'dist/validators',
       format: 'es',
-      plugins:[terser()]
+      plugins:[
+        getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [
+            "@babel/plugin-proposal-class-properties"
+          ] },
+          terser())
+      ]
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      //babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
     external: [ ]
@@ -19,10 +27,16 @@ export default [{
     output: {
       dir: 'dist/formats',
       format: 'es',
-      plugins:[terser()]
+      plugins:[terser(),
+        getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [
+            "@babel/plugin-proposal-class-properties"
+          ] })
+      ]
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      //babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
     external: []
@@ -32,10 +46,16 @@ export default [{
     output: {
       dir: 'dist/core',
       format: 'es',
-      plugins:[]
+      plugins: [
+        getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [
+            "@babel/plugin-proposal-class-properties"
+          ] })
+      ],
     },
     plugins: [
-      babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
+      //babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',}),
       nodeResolve()
     ],
     external: ['vue']

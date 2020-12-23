@@ -14,7 +14,6 @@
   "author": "mluria",
   "license": "ISC",
   "dependencies": {
-    "core-js": "^3.8.1",
     "vue": "^2.6.12"
   },
   "devDependencies": {

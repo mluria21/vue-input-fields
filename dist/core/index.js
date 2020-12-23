@@ -1,744 +1,20 @@
-var $ = require('../internals/export');
-var $filter = require('../internals/array-iteration').filter;
-var arrayMethodHasSpeciesSupport = require('../internals/array-method-has-species-support');
-var arrayMethodUsesToLength = require('../internals/array-method-uses-to-length');
-
-var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('filter');
-// Edge 14- issue
-var USES_TO_LENGTH = arrayMethodUsesToLength('filter');
-
-// `Array.prototype.filter` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.filter
-// with adding support of @@species
-$({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
-  filter: function filter(callbackfn /* , thisArg */) {
-    return $filter(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-var $$1 = require('../internals/export');
-var $find = require('../internals/array-iteration').find;
-var addToUnscopables = require('../internals/add-to-unscopables');
-var arrayMethodUsesToLength$1 = require('../internals/array-method-uses-to-length');
-
-var FIND = 'find';
-var SKIPS_HOLES = true;
-
-var USES_TO_LENGTH$1 = arrayMethodUsesToLength$1(FIND);
-
-// Shouldn't skip holes
-if (FIND in []) Array(1)[FIND](function () { SKIPS_HOLES = false; });
-
-// `Array.prototype.find` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-$$1({ target: 'Array', proto: true, forced: SKIPS_HOLES || !USES_TO_LENGTH$1 }, {
-  find: function find(callbackfn /* , that = undefined */) {
-    return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables(FIND);
-
-var $$2 = require('../internals/export');
-var flattenIntoArray = require('../internals/flatten-into-array');
-var toObject = require('../internals/to-object');
-var toLength = require('../internals/to-length');
-var toInteger = require('../internals/to-integer');
-var arraySpeciesCreate = require('../internals/array-species-create');
-
-// `Array.prototype.flat` method
-// https://github.com/tc39/proposal-flatMap
-$$2({ target: 'Array', proto: true }, {
-  flat: function flat(/* depthArg = 1 */) {
-    var depthArg = arguments.length ? arguments[0] : undefined;
-    var O = toObject(this);
-    var sourceLen = toLength(O.length);
-    var A = arraySpeciesCreate(O, 0);
-    A.length = flattenIntoArray(A, O, O, sourceLen, 0, depthArg === undefined ? 1 : toInteger(depthArg));
-    return A;
-  }
-});
-
-var $$3 = require('../internals/export');
-var forEach = require('../internals/array-for-each');
-
-// `Array.prototype.forEach` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
-$$3({ target: 'Array', proto: true, forced: [].forEach != forEach }, {
-  forEach: forEach
-});
-
-var $$4 = require('../internals/export');
-var $includes = require('../internals/array-includes').includes;
-var addToUnscopables$1 = require('../internals/add-to-unscopables');
-var arrayMethodUsesToLength$2 = require('../internals/array-method-uses-to-length');
-
-var USES_TO_LENGTH$2 = arrayMethodUsesToLength$2('indexOf', { ACCESSORS: true, 1: 0 });
-
-// `Array.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.includes
-$$4({ target: 'Array', proto: true, forced: !USES_TO_LENGTH$2 }, {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// https://tc39.github.io/ecma262/#sec-array.prototype-@@unscopables
-addToUnscopables$1('includes');
-
-var $$5 = require('../internals/export');
-var IndexedObject = require('../internals/indexed-object');
-var toIndexedObject = require('../internals/to-indexed-object');
-var arrayMethodIsStrict = require('../internals/array-method-is-strict');
-
-var nativeJoin = [].join;
-
-var ES3_STRINGS = IndexedObject != Object;
-var STRICT_METHOD = arrayMethodIsStrict('join', ',');
-
-// `Array.prototype.join` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.join
-$$5({ target: 'Array', proto: true, forced: ES3_STRINGS || !STRICT_METHOD }, {
-  join: function join(separator) {
-    return nativeJoin.call(toIndexedObject(this), separator === undefined ? ',' : separator);
-  }
-});
-
-var $$6 = require('../internals/export');
-var $map = require('../internals/array-iteration').map;
-var arrayMethodHasSpeciesSupport$1 = require('../internals/array-method-has-species-support');
-var arrayMethodUsesToLength$3 = require('../internals/array-method-uses-to-length');
-
-var HAS_SPECIES_SUPPORT$1 = arrayMethodHasSpeciesSupport$1('map');
-// FF49- issue
-var USES_TO_LENGTH$3 = arrayMethodUsesToLength$3('map');
-
-// `Array.prototype.map` method
-// https://tc39.github.io/ecma262/#sec-array.prototype.map
-// with adding support of @@species
-$$6({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT$1 || !USES_TO_LENGTH$3 }, {
-  map: function map(callbackfn /* , thisArg */) {
-    return $map(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-// this method was added to unscopables after implementation
-// in popular engines, so it's moved to a separate module
-var addToUnscopables$2 = require('../internals/add-to-unscopables');
-
-addToUnscopables$2('flat');
-
-var DESCRIPTORS = require('../internals/descriptors');
-var defineProperty = require('../internals/object-define-property').f;
-
-var FunctionPrototype = Function.prototype;
-var FunctionPrototypeToString = FunctionPrototype.toString;
-var nameRE = /^\s*function ([^ (]*)/;
-var NAME = 'name';
-
-// Function instances `.name` property
-// https://tc39.github.io/ecma262/#sec-function-instances-name
-if (DESCRIPTORS && !(NAME in FunctionPrototype)) {
-  defineProperty(FunctionPrototype, NAME, {
-    configurable: true,
-    get: function () {
-      try {
-        return FunctionPrototypeToString.call(this).match(nameRE)[1];
-      } catch (error) {
-        return '';
-      }
-    }
-  });
-}
-
-var $$7 = require('../internals/export');
-var toObject$1 = require('../internals/to-object');
-var nativeKeys = require('../internals/object-keys');
-var fails = require('../internals/fails');
-
-var FAILS_ON_PRIMITIVES = fails(function () { nativeKeys(1); });
-
-// `Object.keys` method
-// https://tc39.github.io/ecma262/#sec-object.keys
-$$7({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
-  keys: function keys(it) {
-    return nativeKeys(toObject$1(it));
-  }
-});
-
-var TO_STRING_TAG_SUPPORT = require('../internals/to-string-tag-support');
-var redefine = require('../internals/redefine');
-var toString = require('../internals/object-to-string');
-
-// `Object.prototype.toString` method
-// https://tc39.github.io/ecma262/#sec-object.prototype.tostring
-if (!TO_STRING_TAG_SUPPORT) {
-  redefine(Object.prototype, 'toString', toString, { unsafe: true });
-}
-
-var $$8 = require('../internals/export');
-var $values = require('../internals/object-to-array').values;
-
-// `Object.values` method
-// https://tc39.github.io/ecma262/#sec-object.values
-$$8({ target: 'Object', stat: true }, {
-  values: function values(O) {
-    return $values(O);
-  }
-});
-
-var $$9 = require('../internals/export');
-var IS_PURE = require('../internals/is-pure');
-var global$1 = require('../internals/global');
-var getBuiltIn = require('../internals/get-built-in');
-var NativePromise = require('../internals/native-promise-constructor');
-var redefine$1 = require('../internals/redefine');
-var redefineAll = require('../internals/redefine-all');
-var setToStringTag = require('../internals/set-to-string-tag');
-var setSpecies = require('../internals/set-species');
-var isObject = require('../internals/is-object');
-var aFunction = require('../internals/a-function');
-var anInstance = require('../internals/an-instance');
-var inspectSource = require('../internals/inspect-source');
-var iterate = require('../internals/iterate');
-var checkCorrectnessOfIteration = require('../internals/check-correctness-of-iteration');
-var speciesConstructor = require('../internals/species-constructor');
-var task = require('../internals/task').set;
-var microtask = require('../internals/microtask');
-var promiseResolve = require('../internals/promise-resolve');
-var hostReportErrors = require('../internals/host-report-errors');
-var newPromiseCapabilityModule = require('../internals/new-promise-capability');
-var perform = require('../internals/perform');
-var InternalStateModule = require('../internals/internal-state');
-var isForced = require('../internals/is-forced');
-var wellKnownSymbol = require('../internals/well-known-symbol');
-var IS_NODE = require('../internals/engine-is-node');
-var V8_VERSION = require('../internals/engine-v8-version');
-
-var SPECIES = wellKnownSymbol('species');
-var PROMISE = 'Promise';
-var getInternalState = InternalStateModule.get;
-var setInternalState = InternalStateModule.set;
-var getInternalPromiseState = InternalStateModule.getterFor(PROMISE);
-var PromiseConstructor = NativePromise;
-var TypeError$1 = global$1.TypeError;
-var document$1 = global$1.document;
-var process$1 = global$1.process;
-var $fetch = getBuiltIn('fetch');
-var newPromiseCapability = newPromiseCapabilityModule.f;
-var newGenericPromiseCapability = newPromiseCapability;
-var DISPATCH_EVENT = !!(document$1 && document$1.createEvent && global$1.dispatchEvent);
-var NATIVE_REJECTION_EVENT = typeof PromiseRejectionEvent == 'function';
-var UNHANDLED_REJECTION = 'unhandledrejection';
-var REJECTION_HANDLED = 'rejectionhandled';
-var PENDING = 0;
-var FULFILLED = 1;
-var REJECTED = 2;
-var HANDLED = 1;
-var UNHANDLED = 2;
-var Internal, OwnPromiseCapability, PromiseWrapper, nativeThen;
-
-var FORCED = isForced(PROMISE, function () {
-  var GLOBAL_CORE_JS_PROMISE = inspectSource(PromiseConstructor) !== String(PromiseConstructor);
-  if (!GLOBAL_CORE_JS_PROMISE) {
-    // V8 6.6 (Node 10 and Chrome 66) have a bug with resolving custom thenables
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=830565
-    // We can't detect it synchronously, so just check versions
-    if (V8_VERSION === 66) return true;
-    // Unhandled rejections tracking support, NodeJS Promise without it fails @@species test
-    if (!IS_NODE && !NATIVE_REJECTION_EVENT) return true;
-  }
-  // We need Promise#finally in the pure version for preventing prototype pollution
-  if (IS_PURE && !PromiseConstructor.prototype['finally']) return true;
-  // We can't use @@species feature detection in V8 since it causes
-  // deoptimization and performance degradation
-  // https://github.com/zloirock/core-js/issues/679
-  if (V8_VERSION >= 51 && /native code/.test(PromiseConstructor)) return false;
-  // Detect correctness of subclassing with @@species support
-  var promise = PromiseConstructor.resolve(1);
-  var FakePromise = function (exec) {
-    exec(function () { /* empty */ }, function () { /* empty */ });
-  };
-  var constructor = promise.constructor = {};
-  constructor[SPECIES] = FakePromise;
-  return !(promise.then(function () { /* empty */ }) instanceof FakePromise);
-});
-
-var INCORRECT_ITERATION = FORCED || !checkCorrectnessOfIteration(function (iterable) {
-  PromiseConstructor.all(iterable)['catch'](function () { /* empty */ });
-});
-
-// helpers
-var isThenable = function (it) {
-  var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
-};
-
-var notify = function (state, isReject) {
-  if (state.notified) return;
-  state.notified = true;
-  var chain = state.reactions;
-  microtask(function () {
-    var value = state.value;
-    var ok = state.state == FULFILLED;
-    var index = 0;
-    // variable length - can't use forEach
-    while (chain.length > index) {
-      var reaction = chain[index++];
-      var handler = ok ? reaction.ok : reaction.fail;
-      var resolve = reaction.resolve;
-      var reject = reaction.reject;
-      var domain = reaction.domain;
-      var result, then, exited;
-      try {
-        if (handler) {
-          if (!ok) {
-            if (state.rejection === UNHANDLED) onHandleUnhandled(state);
-            state.rejection = HANDLED;
-          }
-          if (handler === true) result = value;
-          else {
-            if (domain) domain.enter();
-            result = handler(value); // can throw
-            if (domain) {
-              domain.exit();
-              exited = true;
-            }
-          }
-          if (result === reaction.promise) {
-            reject(TypeError$1('Promise-chain cycle'));
-          } else if (then = isThenable(result)) {
-            then.call(result, resolve, reject);
-          } else resolve(result);
-        } else reject(value);
-      } catch (error) {
-        if (domain && !exited) domain.exit();
-        reject(error);
-      }
-    }
-    state.reactions = [];
-    state.notified = false;
-    if (isReject && !state.rejection) onUnhandled(state);
-  });
-};
-
-var dispatchEvent = function (name, promise, reason) {
-  var event, handler;
-  if (DISPATCH_EVENT) {
-    event = document$1.createEvent('Event');
-    event.promise = promise;
-    event.reason = reason;
-    event.initEvent(name, false, true);
-    global$1.dispatchEvent(event);
-  } else event = { promise: promise, reason: reason };
-  if (!NATIVE_REJECTION_EVENT && (handler = global$1['on' + name])) handler(event);
-  else if (name === UNHANDLED_REJECTION) hostReportErrors('Unhandled promise rejection', reason);
-};
-
-var onUnhandled = function (state) {
-  task.call(global$1, function () {
-    var promise = state.facade;
-    var value = state.value;
-    var IS_UNHANDLED = isUnhandled(state);
-    var result;
-    if (IS_UNHANDLED) {
-      result = perform(function () {
-        if (IS_NODE) {
-          process$1.emit('unhandledRejection', value, promise);
-        } else dispatchEvent(UNHANDLED_REJECTION, promise, value);
-      });
-      // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
-      state.rejection = IS_NODE || isUnhandled(state) ? UNHANDLED : HANDLED;
-      if (result.error) throw result.value;
-    }
-  });
-};
-
-var isUnhandled = function (state) {
-  return state.rejection !== HANDLED && !state.parent;
-};
-
-var onHandleUnhandled = function (state) {
-  task.call(global$1, function () {
-    var promise = state.facade;
-    if (IS_NODE) {
-      process$1.emit('rejectionHandled', promise);
-    } else dispatchEvent(REJECTION_HANDLED, promise, state.value);
-  });
-};
-
-var bind = function (fn, state, unwrap) {
-  return function (value) {
-    fn(state, value, unwrap);
-  };
-};
-
-var internalReject = function (state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  state.value = value;
-  state.state = REJECTED;
-  notify(state, true);
-};
-
-var internalResolve = function (state, value, unwrap) {
-  if (state.done) return;
-  state.done = true;
-  if (unwrap) state = unwrap;
-  try {
-    if (state.facade === value) throw TypeError$1("Promise can't be resolved itself");
-    var then = isThenable(value);
-    if (then) {
-      microtask(function () {
-        var wrapper = { done: false };
-        try {
-          then.call(value,
-            bind(internalResolve, wrapper, state),
-            bind(internalReject, wrapper, state)
-          );
-        } catch (error) {
-          internalReject(wrapper, error, state);
-        }
-      });
-    } else {
-      state.value = value;
-      state.state = FULFILLED;
-      notify(state, false);
-    }
-  } catch (error) {
-    internalReject({ done: false }, error, state);
-  }
-};
-
-// constructor polyfill
-if (FORCED) {
-  // 25.4.3.1 Promise(executor)
-  PromiseConstructor = function Promise(executor) {
-    anInstance(this, PromiseConstructor, PROMISE);
-    aFunction(executor);
-    Internal.call(this);
-    var state = getInternalState(this);
-    try {
-      executor(bind(internalResolve, state), bind(internalReject, state));
-    } catch (error) {
-      internalReject(state, error);
-    }
-  };
-  // eslint-disable-next-line no-unused-vars
-  Internal = function Promise(executor) {
-    setInternalState(this, {
-      type: PROMISE,
-      done: false,
-      notified: false,
-      parent: false,
-      reactions: [],
-      rejection: false,
-      state: PENDING,
-      value: undefined
-    });
-  };
-  Internal.prototype = redefineAll(PromiseConstructor.prototype, {
-    // `Promise.prototype.then` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.then
-    then: function then(onFulfilled, onRejected) {
-      var state = getInternalPromiseState(this);
-      var reaction = newPromiseCapability(speciesConstructor(this, PromiseConstructor));
-      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail = typeof onRejected == 'function' && onRejected;
-      reaction.domain = IS_NODE ? process$1.domain : undefined;
-      state.parent = true;
-      state.reactions.push(reaction);
-      if (state.state != PENDING) notify(state, false);
-      return reaction.promise;
-    },
-    // `Promise.prototype.catch` method
-    // https://tc39.github.io/ecma262/#sec-promise.prototype.catch
-    'catch': function (onRejected) {
-      return this.then(undefined, onRejected);
-    }
-  });
-  OwnPromiseCapability = function () {
-    var promise = new Internal();
-    var state = getInternalState(promise);
-    this.promise = promise;
-    this.resolve = bind(internalResolve, state);
-    this.reject = bind(internalReject, state);
-  };
-  newPromiseCapabilityModule.f = newPromiseCapability = function (C) {
-    return C === PromiseConstructor || C === PromiseWrapper
-      ? new OwnPromiseCapability(C)
-      : newGenericPromiseCapability(C);
-  };
-
-  if (!IS_PURE && typeof NativePromise == 'function') {
-    nativeThen = NativePromise.prototype.then;
-
-    // wrap native Promise#then for native async functions
-    redefine$1(NativePromise.prototype, 'then', function then(onFulfilled, onRejected) {
-      var that = this;
-      return new PromiseConstructor(function (resolve, reject) {
-        nativeThen.call(that, resolve, reject);
-      }).then(onFulfilled, onRejected);
-    // https://github.com/zloirock/core-js/issues/640
-    }, { unsafe: true });
-
-    // wrap fetch result
-    if (typeof $fetch == 'function') $$9({ global: true, enumerable: true, forced: true }, {
-      // eslint-disable-next-line no-unused-vars
-      fetch: function fetch(input /* , init */) {
-        return promiseResolve(PromiseConstructor, $fetch.apply(global$1, arguments));
-      }
-    });
-  }
-}
-
-$$9({ global: true, wrap: true, forced: FORCED }, {
-  Promise: PromiseConstructor
-});
-
-setToStringTag(PromiseConstructor, PROMISE, false, true);
-setSpecies(PROMISE);
-
-PromiseWrapper = getBuiltIn(PROMISE);
-
-// statics
-$$9({ target: PROMISE, stat: true, forced: FORCED }, {
-  // `Promise.reject` method
-  // https://tc39.github.io/ecma262/#sec-promise.reject
-  reject: function reject(r) {
-    var capability = newPromiseCapability(this);
-    capability.reject.call(undefined, r);
-    return capability.promise;
-  }
-});
-
-$$9({ target: PROMISE, stat: true, forced: IS_PURE || FORCED }, {
-  // `Promise.resolve` method
-  // https://tc39.github.io/ecma262/#sec-promise.resolve
-  resolve: function resolve(x) {
-    return promiseResolve(IS_PURE && this === PromiseWrapper ? PromiseConstructor : this, x);
-  }
-});
-
-$$9({ target: PROMISE, stat: true, forced: INCORRECT_ITERATION }, {
-  // `Promise.all` method
-  // https://tc39.github.io/ecma262/#sec-promise.all
-  all: function all(iterable) {
-    var C = this;
-    var capability = newPromiseCapability(C);
-    var resolve = capability.resolve;
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction(C.resolve);
-      var values = [];
-      var counter = 0;
-      var remaining = 1;
-      iterate(iterable, function (promise) {
-        var index = counter++;
-        var alreadyCalled = false;
-        values.push(undefined);
-        remaining++;
-        $promiseResolve.call(C, promise).then(function (value) {
-          if (alreadyCalled) return;
-          alreadyCalled = true;
-          values[index] = value;
-          --remaining || resolve(values);
-        }, reject);
-      });
-      --remaining || resolve(values);
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  },
-  // `Promise.race` method
-  // https://tc39.github.io/ecma262/#sec-promise.race
-  race: function race(iterable) {
-    var C = this;
-    var capability = newPromiseCapability(C);
-    var reject = capability.reject;
-    var result = perform(function () {
-      var $promiseResolve = aFunction(C.resolve);
-      iterate(iterable, function (promise) {
-        $promiseResolve.call(C, promise).then(capability.resolve, reject);
-      });
-    });
-    if (result.error) reject(result.value);
-    return capability.promise;
-  }
-});
-
-var $$a = require('../internals/export');
-var exec = require('../internals/regexp-exec');
-
-$$a({ target: 'RegExp', proto: true, forced: /./.exec !== exec }, {
-  exec: exec
-});
-
-var $$b = require('../internals/export');
-var notARegExp = require('../internals/not-a-regexp');
-var requireObjectCoercible = require('../internals/require-object-coercible');
-var correctIsRegExpLogic = require('../internals/correct-is-regexp-logic');
-
-// `String.prototype.includes` method
-// https://tc39.github.io/ecma262/#sec-string.prototype.includes
-$$b({ target: 'String', proto: true, forced: !correctIsRegExpLogic('includes') }, {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~String(requireObjectCoercible(this))
-      .indexOf(notARegExp(searchString), arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-var fixRegExpWellKnownSymbolLogic = require('../internals/fix-regexp-well-known-symbol-logic');
-var isRegExp = require('../internals/is-regexp');
-var anObject = require('../internals/an-object');
-var requireObjectCoercible$1 = require('../internals/require-object-coercible');
-var speciesConstructor$1 = require('../internals/species-constructor');
-var advanceStringIndex = require('../internals/advance-string-index');
-var toLength$1 = require('../internals/to-length');
-var callRegExpExec = require('../internals/regexp-exec-abstract');
-var regexpExec = require('../internals/regexp-exec');
-var fails$1 = require('../internals/fails');
-
-var arrayPush = [].push;
-var min = Math.min;
-var MAX_UINT32 = 0xFFFFFFFF;
-
-// babel-minify transpiles RegExp('x', 'y') -> /x/y and it causes SyntaxError
-var SUPPORTS_Y = !fails$1(function () { return !RegExp(MAX_UINT32, 'y'); });
-
-// @@split logic
-fixRegExpWellKnownSymbolLogic('split', 2, function (SPLIT, nativeSplit, maybeCallNative) {
-  var internalSplit;
-  if (
-    'abbc'.split(/(b)*/)[1] == 'c' ||
-    'test'.split(/(?:)/, -1).length != 4 ||
-    'ab'.split(/(?:ab)*/).length != 2 ||
-    '.'.split(/(.?)(.?)/).length != 4 ||
-    '.'.split(/()()/).length > 1 ||
-    ''.split(/.?/).length
-  ) {
-    // based on es5-shim implementation, need to rework it
-    internalSplit = function (separator, limit) {
-      var string = String(requireObjectCoercible$1(this));
-      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
-      if (lim === 0) return [];
-      if (separator === undefined) return [string];
-      // If `separator` is not a regex, use native split
-      if (!isRegExp(separator)) {
-        return nativeSplit.call(string, separator, lim);
-      }
-      var output = [];
-      var flags = (separator.ignoreCase ? 'i' : '') +
-                  (separator.multiline ? 'm' : '') +
-                  (separator.unicode ? 'u' : '') +
-                  (separator.sticky ? 'y' : '');
-      var lastLastIndex = 0;
-      // Make `global` and avoid `lastIndex` issues by working with a copy
-      var separatorCopy = new RegExp(separator.source, flags + 'g');
-      var match, lastIndex, lastLength;
-      while (match = regexpExec.call(separatorCopy, string)) {
-        lastIndex = separatorCopy.lastIndex;
-        if (lastIndex > lastLastIndex) {
-          output.push(string.slice(lastLastIndex, match.index));
-          if (match.length > 1 && match.index < string.length) arrayPush.apply(output, match.slice(1));
-          lastLength = match[0].length;
-          lastLastIndex = lastIndex;
-          if (output.length >= lim) break;
-        }
-        if (separatorCopy.lastIndex === match.index) separatorCopy.lastIndex++; // Avoid an infinite loop
-      }
-      if (lastLastIndex === string.length) {
-        if (lastLength || !separatorCopy.test('')) output.push('');
-      } else output.push(string.slice(lastLastIndex));
-      return output.length > lim ? output.slice(0, lim) : output;
-    };
-  // Chakra, V8
-  } else if ('0'.split(undefined, 0).length) {
-    internalSplit = function (separator, limit) {
-      return separator === undefined && limit === 0 ? [] : nativeSplit.call(this, separator, limit);
-    };
-  } else internalSplit = nativeSplit;
-
-  return [
-    // `String.prototype.split` method
-    // https://tc39.github.io/ecma262/#sec-string.prototype.split
-    function split(separator, limit) {
-      var O = requireObjectCoercible$1(this);
-      var splitter = separator == undefined ? undefined : separator[SPLIT];
-      return splitter !== undefined
-        ? splitter.call(separator, O, limit)
-        : internalSplit.call(String(O), separator, limit);
-    },
-    // `RegExp.prototype[@@split]` method
-    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
-    //
-    // NOTE: This cannot be properly polyfilled in engines that don't support
-    // the 'y' flag.
-    function (regexp, limit) {
-      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== nativeSplit);
-      if (res.done) return res.value;
-
-      var rx = anObject(regexp);
-      var S = String(this);
-      var C = speciesConstructor$1(rx, RegExp);
-
-      var unicodeMatching = rx.unicode;
-      var flags = (rx.ignoreCase ? 'i' : '') +
-                  (rx.multiline ? 'm' : '') +
-                  (rx.unicode ? 'u' : '') +
-                  (SUPPORTS_Y ? 'y' : 'g');
-
-      // ^(? + rx + ) is needed, in combination with some S slicing, to
-      // simulate the 'y' flag.
-      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
-      var lim = limit === undefined ? MAX_UINT32 : limit >>> 0;
-      if (lim === 0) return [];
-      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
-      var p = 0;
-      var q = 0;
-      var A = [];
-      while (q < S.length) {
-        splitter.lastIndex = SUPPORTS_Y ? q : 0;
-        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
-        var e;
-        if (
-          z === null ||
-          (e = min(toLength$1(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
-        ) {
-          q = advanceStringIndex(S, q, unicodeMatching);
-        } else {
-          A.push(S.slice(p, q));
-          if (A.length === lim) return A;
-          for (var i = 1; i <= z.length - 1; i++) {
-            A.push(z[i]);
-            if (A.length === lim) return A;
-          }
-          q = p = e;
-        }
-      }
-      A.push(S.slice(p));
-      return A;
-    }
-  ];
-}, !SUPPORTS_Y);
-
-var global$2 = require('../internals/global');
-var DOMIterables = require('../internals/dom-iterables');
-var forEach$1 = require('../internals/array-for-each');
-var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
-
-for (var COLLECTION_NAME in DOMIterables) {
-  var Collection = global$2[COLLECTION_NAME];
-  var CollectionPrototype = Collection && Collection.prototype;
-  // some Chrome versions have non-configurable methods on DOMTokenList
-  if (CollectionPrototype && CollectionPrototype.forEach !== forEach$1) try {
-    createNonEnumerableProperty(CollectionPrototype, 'forEach', forEach$1);
-  } catch (error) {
-    CollectionPrototype.forEach = forEach$1;
-  }
-}
+import 'core-js/modules/es.array.filter.js';
+import 'core-js/modules/es.array.find.js';
+import 'core-js/modules/es.array.flat.js';
+import 'core-js/modules/es.array.for-each.js';
+import 'core-js/modules/es.array.includes.js';
+import 'core-js/modules/es.array.join.js';
+import 'core-js/modules/es.array.map.js';
+import 'core-js/modules/es.array.unscopables.flat.js';
+import 'core-js/modules/es.function.name.js';
+import 'core-js/modules/es.object.keys.js';
+import 'core-js/modules/es.object.to-string.js';
+import 'core-js/modules/es.object.values.js';
+import 'core-js/modules/es.promise.js';
+import 'core-js/modules/es.regexp.exec.js';
+import 'core-js/modules/es.string.includes.js';
+import 'core-js/modules/es.string.split.js';
+import 'core-js/modules/web.dom-collections.for-each.js';
 
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -1622,7 +898,7 @@ function isPrimitive (value) {
  * Objects from primitive values when we know the value
  * is a JSON-compliant type.
  */
-function isObject$1 (obj) {
+function isObject (obj) {
   return obj !== null && typeof obj === 'object'
 }
 
@@ -1643,7 +919,7 @@ function isPlainObject (obj) {
   return _toString.call(obj) === '[object Object]'
 }
 
-function isRegExp$1 (v) {
+function isRegExp (v) {
   return _toString.call(v) === '[object RegExp]'
 }
 
@@ -1666,7 +942,7 @@ function isPromise (val) {
 /**
  * Convert a value to a string that is actually rendered.
  */
-function toString$1 (val) {
+function toString (val) {
   return val == null
     ? ''
     : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)
@@ -1792,7 +1068,7 @@ function nativeBind (fn, ctx) {
   return fn.bind(ctx)
 }
 
-var bind$1 = Function.prototype.bind
+var bind = Function.prototype.bind
   ? nativeBind
   : polyfillBind;
 
@@ -1822,7 +1098,7 @@ function extend (to, _from) {
 /**
  * Merge an Array of Objects into a single Object.
  */
-function toObject$2 (arr) {
+function toObject (arr) {
   var res = {};
   for (var i = 0; i < arr.length; i++) {
     if (arr[i]) {
@@ -1859,8 +1135,8 @@ var identity = function (_) { return _; };
  */
 function looseEqual (a, b) {
   if (a === b) { return true }
-  var isObjectA = isObject$1(a);
-  var isObjectB = isObject$1(b);
+  var isObjectA = isObject(a);
+  var isObjectB = isObject(b);
   if (isObjectA && isObjectB) {
     try {
       var isArrayA = Array.isArray(a);
@@ -2551,7 +1827,7 @@ function copyAugment (target, src, keys) {
  * or the existing observer if the value already has one.
  */
 function observe (value, asRootData) {
-  if (!isObject$1(value) || value instanceof VNode) {
+  if (!isObject(value) || value instanceof VNode) {
     return
   }
   var ob;
@@ -3223,7 +2499,7 @@ function getPropDefaultValue (vm, prop, key) {
   }
   var def = prop.default;
   // warn against non-factory defaults for Object & Array
-  if (process.env.NODE_ENV !== 'production' && isObject$1(def)) {
+  if (process.env.NODE_ENV !== 'production' && isObject(def)) {
     warn(
       'Invalid default value for prop "' + key + '": ' +
       'Props with type Object/Array must use a factory function ' +
@@ -3683,7 +2959,7 @@ function traverse (val) {
 function _traverse (val, seen) {
   var i, keys;
   var isA = Array.isArray(val);
-  if ((!isA && !isObject$1(val)) || Object.isFrozen(val) || val instanceof VNode) {
+  if ((!isA && !isObject(val)) || Object.isFrozen(val) || val instanceof VNode) {
     return
   }
   if (val.__ob__) {
@@ -4213,7 +3489,7 @@ function renderList (
     for (i = 0; i < val; i++) {
       ret[i] = render(i + 1, i);
     }
-  } else if (isObject$1(val)) {
+  } else if (isObject(val)) {
     if (hasSymbol && val[Symbol.iterator]) {
       ret = [];
       var iterator = val[Symbol.iterator]();
@@ -4254,7 +3530,7 @@ function renderSlot (
   if (scopedSlotFn) { // scoped slot
     props = props || {};
     if (bindObject) {
-      if (process.env.NODE_ENV !== 'production' && !isObject$1(bindObject)) {
+      if (process.env.NODE_ENV !== 'production' && !isObject(bindObject)) {
         warn(
           'slot v-bind without argument expects an Object',
           this
@@ -4329,14 +3605,14 @@ function bindObjectProps (
   isSync
 ) {
   if (value) {
-    if (!isObject$1(value)) {
+    if (!isObject(value)) {
       process.env.NODE_ENV !== 'production' && warn(
         'v-bind without argument expects an Object or Array value',
         this
       );
     } else {
       if (Array.isArray(value)) {
-        value = toObject$2(value);
+        value = toObject(value);
       }
       var hash;
       var loop = function ( key ) {
@@ -4512,7 +3788,7 @@ function prependModifier (value, symbol) {
 function installRenderHelpers (target) {
   target._o = markOnce;
   target._n = toNumber;
-  target._s = toString$1;
+  target._s = toString;
   target._l = renderList;
   target._t = renderSlot;
   target._q = looseEqual;
@@ -4759,7 +4035,7 @@ function createComponent (
   var baseCtor = context.$options._base;
 
   // plain options object: turn it into a constructor
-  if (isObject$1(Ctor)) {
+  if (isObject(Ctor)) {
     Ctor = baseCtor.extend(Ctor);
   }
 
@@ -5045,10 +4321,10 @@ function applyNS (vnode, ns, force) {
 // necessary to ensure parent re-render when deep bindings like :style and
 // :class are used on slot nodes
 function registerDeepBindings (data) {
-  if (isObject$1(data.style)) {
+  if (isObject(data.style)) {
     traverse(data.style);
   }
-  if (isObject$1(data.class)) {
+  if (isObject(data.class)) {
     traverse(data.class);
   }
 }
@@ -5173,7 +4449,7 @@ function ensureCtor (comp, base) {
   ) {
     comp = comp.default;
   }
-  return isObject$1(comp)
+  return isObject(comp)
     ? base.extend(comp)
     : comp
 }
@@ -5264,7 +4540,7 @@ function resolveAsyncComponent (
 
     var res = factory(resolve, reject);
 
-    if (isObject$1(res)) {
+    if (isObject(res)) {
       if (isPromise(res)) {
         // () => Promise
         if (isUndef(factory.resolved)) {
@@ -6136,7 +5412,7 @@ Watcher.prototype.run = function run () {
       // Deep watchers and watchers on Object/Arrays should fire even
       // when the value is the same, because the value may
       // have mutated.
-      isObject$1(value) ||
+      isObject(value) ||
       this.deep
     ) {
       // set new value
@@ -6452,7 +5728,7 @@ function initMethods (vm, methods) {
         );
       }
     }
-    vm[key] = typeof methods[key] !== 'function' ? noop : bind$1(methods[key], vm);
+    vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm);
   }
 }
 
@@ -6838,7 +6114,7 @@ function matches (pattern, name) {
     return pattern.indexOf(name) > -1
   } else if (typeof pattern === 'string') {
     return pattern.split(',').indexOf(name) > -1
-  } else if (isRegExp$1(pattern)) {
+  } else if (isRegExp(pattern)) {
     return pattern.test(name)
   }
   /* istanbul ignore next */
@@ -7132,7 +6408,7 @@ function stringifyClass (value) {
   if (Array.isArray(value)) {
     return stringifyArray(value)
   }
-  if (isObject$1(value)) {
+  if (isObject(value)) {
     return stringifyObject(value)
   }
   if (typeof value === 'string') {
@@ -7471,7 +6747,7 @@ function createPatchFunction (backend) {
       !(
         config.ignoredElements.length &&
         config.ignoredElements.some(function (ignore) {
-          return isRegExp$1(ignore)
+          return isRegExp(ignore)
             ? ignore.test(vnode.tag)
             : ignore === vnode.tag
         })
@@ -8678,7 +7954,7 @@ function normalizeStyleData (data) {
 // normalize possible array / string values into Object
 function normalizeStyleBinding (bindingStyle) {
   if (Array.isArray(bindingStyle)) {
-    return toObject$2(bindingStyle)
+    return toObject(bindingStyle)
   }
   if (typeof bindingStyle === 'string') {
     return parseStyleText(bindingStyle)
@@ -9140,7 +8416,7 @@ function enter (vnode, toggleDisplay) {
     : enterCancelled;
 
   var explicitEnterDuration = toNumber(
-    isObject$1(duration)
+    isObject(duration)
       ? duration.enter
       : duration
   );
@@ -9248,7 +8524,7 @@ function leave (vnode, rm) {
   var userWantsControl = getHookArgumentsLength(leave);
 
   var explicitLeaveDuration = toNumber(
-    isObject$1(duration)
+    isObject(duration)
       ? duration.leave
       : duration
   );

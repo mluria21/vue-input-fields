@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Loader from './Loader'
+import Loader from './Loader.vue'
 export default {
   props: {
     processing: {

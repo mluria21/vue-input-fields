@@ -36,7 +36,10 @@
 </template>
 
 <script>
+import DefaultField from './DefaultField'
 export default {
+    components:{DefaultField},
+    
     inheritAttrs :false,
 
     props:{

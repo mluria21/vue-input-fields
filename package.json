@@ -4,6 +4,7 @@
   "description": "input fields for vue.js with validation",
   "main": "main.js",
   "scripts": {
+    "build":"rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

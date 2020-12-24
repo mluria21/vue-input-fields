@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import DefaultField from './DefaultField'
+import DefaultField from './DefaultField.vue'
 export default {
     components:{DefaultField},
-    
+
     inheritAttrs :false,
 
     props:{

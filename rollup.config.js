@@ -4,7 +4,7 @@ import {terser} from 'rollup-plugin-terser';
 //import multi from '@rollup/plugin-multi-entry';
 import commonjs from '@rollup/plugin-commonjs';
 import buble from '@rollup/plugin-buble';
-//import vue from 'rollup-plugin-vue';
+import vue from 'rollup-plugin-vue';
 export default [{
     input: 'src/forms/validators/index.js',
     output: {
@@ -59,5 +59,23 @@ export default [{
     ],
     external: ['vue',/core-js/,'libphonenumber-js']
   },
+  {
+    input: 'src/fields/nova/index.js', // Path relative to package.json
+    output: {
+        exports: 'named',
+        dir:'dist/fields/nova',
+        plugins: [terser()]
+    },
+    plugins: [
+        commonjs(),
+        vue({
+            css: true, // Dynamically inject css as a <style> tag
+            compileTemplate: true, // Explicitly convert template to render function
+        }),
+        babel({ babelHelpers: 'bundled' ,exclude: 'node_modules/**',extensions: ['.js', '.jsx', '.es6', '.es', '.mjs', '.vue'],}),
+        //buble(), // Transpile to ES5
+    ],
+    external: [/core-js/,'libphonenumber-js','vue']
+  }
 ]; 
   

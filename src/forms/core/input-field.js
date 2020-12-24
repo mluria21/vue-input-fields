@@ -21,7 +21,7 @@ export class InputField{
         this.rules = opt.rules || []
         this.format = opt.format
         this.attr = opt.attr || {id:this.name,placeholder:this.label}
-        this.component = opt.component || 'InputField'
+        this.component = opt.component
         this.options = opt.options || null
     }
 

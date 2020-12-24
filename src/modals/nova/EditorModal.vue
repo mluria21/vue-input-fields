@@ -38,14 +38,14 @@
                     <div class="flex items-center ml-auto">
                         <button @click.prevent="close()" type="button" class="btn btn-link dim cursor-pointer text-80 ml-auto mr-6">Cancel</button>
                         
-                        <ProgressButton
+                        <NovaProgressButton
                         @click.prevent="submit()"
                         type="button"
                         :disabled="submitted"
                         :processing="submitted"
                         >
                         {{config.title}}
-                        </ProgressButton>
+                        </NovaProgressButton>
                     </div>
                 </div>
             </div>

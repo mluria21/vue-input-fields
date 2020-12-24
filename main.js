@@ -1,1 +1,1 @@
-import {required} from './dist/validators'
+import {int} from './dist/validators'

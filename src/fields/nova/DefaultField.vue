@@ -25,8 +25,6 @@ export default {
 
     computed:{
         required(){
-            let nested = [{name:[{name:'hello'}]}]
-            console.log(nested.flat());
             return this.field.rules.filter(rule => rule.callback.name == 'required').length >= 1
         }
     }

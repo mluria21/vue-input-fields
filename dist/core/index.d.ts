@@ -26,7 +26,21 @@ type RuleOptions = {
 }
 
 export declare class InputField {
-    constructor(parameters:FieldOptions) 
+    constructor(parameters:FieldOptions)
+    
+    value:any
+    isValid:boolean
+    errors:[]
+    dirty:boolean
+    rules:[]
+    label:string
+
+    touch():void
+    markAsDirty():void
+    fill():void
+    clear():void
+    async validate(trigger:string)
+    async setFormat(trigger:string,event:any)
 }
 
 export declare class Format {

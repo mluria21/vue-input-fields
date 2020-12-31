@@ -119,7 +119,7 @@ export class InputField{
                 .map(rule =>{  
                     return {
                         fn:rule.callback.name,
-                        error:rule.callback(this.value,this.label) || null
+                        error:rule.callback(this.value,this.label,this) || null
                     }
                 })
                 .filter(rule => rule != null) 
@@ -130,7 +130,7 @@ export class InputField{
         }else{
             let errors = []
             errors = this.rules
-                .map(rule => rule.callback(this.value,this.label)) 
+                .map(rule => rule.callback(this.value,this.label,this)) 
                 .filter(rule => rule != null) 
 
             this.isValid = errors.length == 0 

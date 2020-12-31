@@ -9,5 +9,6 @@ import {expirationDate} from './exp-date'
 import{cvvCode}from './cvv-code'
 import{getCreditCardType}from './credit-card-type'
 import {minLength} from './min-length'
+import {creditCardLength}from './credit-card-length'
 
-export {minLength,sameAs,int,required,phoneValid,email,usaZip,creditCard,expirationDate,cvvCode,getCreditCardType}
+export {minLength,sameAs,int,required,phoneValid,email,usaZip,creditCard,expirationDate,cvvCode,getCreditCardType,creditCardLength}

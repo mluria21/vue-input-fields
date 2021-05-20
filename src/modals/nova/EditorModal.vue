@@ -1,6 +1,6 @@
 <template>
   <div class="modal-editor" v-if="showModal" @click.self.stop="close()">
-        <div class="box-wrapper" style="width:800px;">
+        <div @click.stop="" class="box-wrapper" style="width:800px;">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden w-full">
                 <div>
                     <h2 class="border-b border-40 py-6 px-6 text-90 font-normal text-xl">

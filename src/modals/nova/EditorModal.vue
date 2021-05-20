@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-editor" v-if="showModal" @click.self="close()">
+  <div class="modal-editor" v-if="showModal" @click.self.prevent="close()">
         <div class="box-wrapper" style="width:800px;">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden w-full">
                 <div>

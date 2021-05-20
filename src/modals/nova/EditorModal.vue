@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-editor" v-if="showModal" @click.self.prevent="close()">
+  <div class="modal-editor" v-if="showModal" @click.self.stop="close()">
         <div class="box-wrapper" style="width:800px;">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden w-full">
                 <div>
@@ -36,10 +36,10 @@
 
                 <div class="bg-30 px-6 py-3 flex">
                     <div class="flex items-center ml-auto">
-                        <button @click.prevent="close()" type="button" class="btn btn-link dim cursor-pointer text-80 ml-auto mr-6">Cancel</button>
+                        <button @click.prevent.stop="close()" type="button" class="btn btn-link dim cursor-pointer text-80 ml-auto mr-6">Cancel</button>
                         
                         <NovaProgressButton
-                        @click.prevent="submit()"
+                        @click.prevent.stop="submit()"
                         type="button"
                         :disabled="submitted"
                         :processing="submitted"
